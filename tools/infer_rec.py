@@ -17,7 +17,7 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
-
+import re
 import os
 import sys
 import json
@@ -139,7 +139,7 @@ def main():
     infer_list = config["Global"].get("infer_list", None)
     with open(save_res_path, "w") as fout:
         for file in get_image_file_list(infer_imgs, infer_list=infer_list):
-            logger.info("infer_img: {}".format(file))
+            # logger.info("infer_img: {}".format(file))
             with open(file, "rb") as f:
                 img = f.read()
                 if config["Architecture"]["algorithm"] in [
@@ -219,7 +219,8 @@ def main():
                 info = str(post_result[0])
             else:
                 if len(post_result[0]) >= 2:
-                    info = post_result[0][0] + "\t" + str(post_result[0][1])
+                    ocr_result = re.sub(r'[^0-9A-Za-z]', '',post_result[0][0])
+                    info = file + "\t" + ocr_result + "\t" + str(post_result[0][1])
 
             if info is not None:
                 logger.info("\t result: {}".format(info))

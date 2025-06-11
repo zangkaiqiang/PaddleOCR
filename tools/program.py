@@ -736,6 +736,11 @@ def eval(
                 eval_class(post_result[0], post_result[1], epoch_reset=(idx == 0))
             else:
                 post_result = post_process_class(preds, batch_numpy[1])
+                # print("preds", preds)
+                # print("post_result", post_result)
+
+                post_result = tuple([(clean_str(s), score) for s, score in sublist] for sublist in post_result)
+                # print(post_result)
                 eval_class(post_result, batch_numpy)
 
             pbar.update(1)
@@ -753,6 +758,9 @@ def eval(
         metric["fps"] = 0  # or set to a fallback value
     return metric
 
+def clean_str(s):
+    import re
+    return re.sub(r'[^0-9A-Za-z]', '', s)
 
 def update_center(char_center, post_result, preds):
     result, label = post_result

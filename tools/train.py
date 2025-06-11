@@ -19,6 +19,7 @@ from __future__ import print_function
 
 import os
 import sys
+import re
 
 __dir__ = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(__dir__)
@@ -68,8 +69,21 @@ def main(config, device, logger, vdl_writer, seed):
     step_pre_epoch = len(train_dataloader)
 
     # build post process
-    post_process_class = build_post_process(config["PostProcess"], global_config)
+    post_process_class  = build_post_process(config["PostProcess"], global_config)
+    # # —— 在这里包装一层清洗逻辑 —— 
+    # class CleanPostProcess:
+    #     def __init__(self, inner):
+    #         self.inner = inner
 
+    #     def __call__(self, preds, *args, **kwargs):
+    #         # 调用原始后处理，拿到 list of dict
+    #         results = self.inner(preds, *args, **kwargs)
+    #         # 清洗每个 result["text"]
+    #         for res in results:
+    #             # 只保留 ASCII 数字和字母
+    #             res["text"] = re.sub(r'[^0-9A-Za-z]', '', res["text"])
+    #         return results
+    # post_process_class = CleanPostProcess(post_process_class)
     # build model
     # for rec algorithm
     if hasattr(post_process_class, "character"):

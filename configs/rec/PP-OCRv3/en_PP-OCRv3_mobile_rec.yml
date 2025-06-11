@@ -1,7 +1,7 @@
 Global:
   model_name: en_PP-OCRv3_mobile_rec  # To use static model for inference.
   debug: false
-  use_gpu: true
+  use_gpu: false
   epoch_num: 500
   log_smooth_window: 20
   print_batch_step: 10
@@ -9,9 +9,9 @@ Global:
   save_epoch_step: 3
   eval_batch_step: [0, 2000]
   cal_metric_during_train: true
-  pretrained_model:
+  pretrained_model: 
   checkpoints:
-  save_inference_dir:
+  save_inference_dir: ./output/inference
   use_visualdl: false
   infer_img: doc/imgs_words/ch/word_1.jpg
   character_dict_path: ppocr/utils/en_dict.txt
@@ -104,7 +104,7 @@ Train:
         - valid_ratio
   loader:
     shuffle: true
-    batch_size_per_card: 128
+    batch_size_per_card: 2
     drop_last: true
     num_workers: 4
 Eval:
@@ -130,5 +130,5 @@ Eval:
   loader:
     shuffle: false
     drop_last: false
-    batch_size_per_card: 128
+    batch_size_per_card: 2
     num_workers: 4
